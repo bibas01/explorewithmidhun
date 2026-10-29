@@ -155,7 +155,7 @@ export default async function TrekPage({ params }: { params: Promise<{ slug: str
           <section>
             <h3 className="font-display text-2xl text-charcoal">Suggested Gear List</h3>
             <ul className="mt-4 grid gap-2 text-sm text-charcoal/70 sm:grid-cols-2">
-              {trek.gearList.map((item, i) => (
+              {trek.gearList.map((item: string, i: number) => (
                 <li key={i} className="flex gap-2">
                   <span className="text-saffron">•</span> {item}
                 </li>
