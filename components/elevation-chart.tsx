@@ -37,7 +37,7 @@ export function ElevationChart({ itinerary }: { itinerary: ItineraryDay[] }) {
           />
           <Tooltip 
             contentStyle={{ borderRadius: "8px", border: "none", boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}
-            formatter={(value: number) => [`${value}m`, "Altitude"]}
+            formatter={(value: any) => [`${value}m`, "Altitude"]}
           />
           <Area 
             type="monotone" 
