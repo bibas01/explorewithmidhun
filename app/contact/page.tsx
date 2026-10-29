@@ -30,12 +30,12 @@ export default async function ContactPage({
             <div>
               <p className="text-sm font-medium text-charcoal">Email</p>
               <a href="mailto:hello@explorewithmidhun.com" className="text-charcoal/60 hover:text-saffron">
-                hello@explorewithmidhun.com
+                thapaanjan5@gmail.com
               </a>
             </div>
             <div>
               <p className="text-sm font-medium text-charcoal">WhatsApp</p>
-              <p className="text-charcoal/60">+977 98XX XXXXXX</p>
+              <p className="text-charcoal/60">+977 9818560300</p>
             </div>
             <div>
               <p className="text-sm font-medium text-charcoal">Based in</p>

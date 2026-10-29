@@ -10,8 +10,8 @@ console.log("DEBUG - Key End:", process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.slice
 console.log("DEBUG - URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
 
 const supabase = createClient(
-  "https://yumhsymtywtelkpqoimc.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl1bWhzeW10eXd0ZWxrcHFvaW1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMyNjI0NjAsImV4cCI6MjEwODgzODQ2MH0.6d8rT9A8cxUYq5-xbq5DEDhSbyb-BOrf8RBgxTgdKcc"
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
 const resend = new Resend(process.env.RESEND_API_KEY);
