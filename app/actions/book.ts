@@ -4,6 +4,10 @@ import { createClient } from "@supabase/supabase-js";
 import { Resend } from "resend";
 import { z } from "zod";
 
+console.log("URL in use:", process.env.NEXT_PUBLIC_SUPABASE_URL);
+console.log("Key length:", process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.length);
+console.log("Key starts with:", process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.slice(0, 15));
+
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
