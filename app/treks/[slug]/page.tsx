@@ -38,7 +38,7 @@ export default async function TrekPage({ params }: { params: Promise<{ slug: str
     name: trek.title,
     description: trek.summary,
     touristType: "Adventure Travelers",
-    itinerary: trek.itinerary.map((day) => ({
+    itinerary: trek.itinerary.map((day:any) => ({
       "@type": "TouristAttraction",
       name: `Day ${day.day}: ${day.title}`,
       description: day.description,
