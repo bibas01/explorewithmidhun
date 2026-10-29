@@ -18,8 +18,8 @@ export default async function AdminPage() {
   }
 
   const supabaseAdmin = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
+    "https://yumhsymtywtelkpqoimc.supabase.co",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl1bWhzeW10eXd0ZWxrcHFvaW1jIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MzI2MjQ2MCwiZXhwIjoyMTA4ODM4NDYwfQ.MfGqxYcp3yCzcC_xHP_XMqBHpkEq37tnddTL8DoJSoA"
   );
 
   const { data: bookings, error } = await supabaseAdmin
