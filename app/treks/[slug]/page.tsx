@@ -132,7 +132,7 @@ export default async function TrekPage({ params }: { params: Promise<{ slug: str
             <div>
               <h3 className="font-display text-2xl text-charcoal">What's Included</h3>
               <ul className="mt-4 space-y-2 text-sm text-charcoal/70">
-                {trek.inclusions.map((item, i) => (
+                {trek.inclusions.map((item: string, i: number) => (
                   <li key={i} className="flex gap-2">
                     <span className="text-saffron">✓</span> {item}
                   </li>
@@ -142,7 +142,7 @@ export default async function TrekPage({ params }: { params: Promise<{ slug: str
             <div>
               <h3 className="font-display text-2xl text-charcoal">What's Not Included</h3>
               <ul className="mt-4 space-y-2 text-sm text-charcoal/70">
-                {trek.exclusions.map((item, i) => (
+                {trek.exclusions.map((item: string, i: number) => (
                   <li key={i} className="flex gap-2">
                     <span className="text-charcoal/30">✕</span> {item}
                   </li>
@@ -179,7 +179,7 @@ export default async function TrekPage({ params }: { params: Promise<{ slug: str
               <div>
                 <p className="font-medium text-charcoal">Permits Required</p>
                 <ul className="mt-1 space-y-1 text-charcoal/60">
-                  {trek.permits.map((p, i) => <li key={i}>{p}</li>)}
+                  {trek.permits.map((p: string, i: number) => <li key={i}>{p}</li>)}
                 </ul>
               </div>
               <div>
