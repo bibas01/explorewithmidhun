@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import { treks } from "@/data/treks";
+import { treks } from "@/data/treks"; 
 import { TrekCard } from "@/components/trek-card";
+import { MountainDivider } from "@/components/mountain-divider";
 
 const stats = [
   ["12", "years guiding"],
@@ -14,20 +15,20 @@ export default function HomePage() {
   const featured = treks.filter((t) => t.featured);
 
   return (
-    <>
-      {/* Hero */}
-      <section className="relative flex min-h-[88vh] items-end overflow-hidden">
+    <div className="bg-paper min-h-screen">
+      {/* Hero section */}
+      <section className="relative flex min-h-[88vh] items-end overflow-hidden pb-12 bg-charcoal">
         <Image
-          src="/hero.jpg"
+          src="/images/hero.jpg"
           alt="Himalayan trail at dawn"
           fill
           priority
           sizes="100vw"
-          className="object-cover"
+          className="object-cover object-right"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/40 to-charcoal/10" />
 
-        <div className="relative mx-auto w-full max-w-6xl px-4 pb-16 sm:px-6">
+        <div className="relative z-10 mx-auto w-full max-w-6xl px-4 pb-24 sm:px-6">
           <p className="text-xs uppercase tracking-[0.3em] text-saffron">
             Freelance trekking guide · Nepal
           </p>
@@ -41,7 +42,7 @@ export default function HomePage() {
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
               href="/treks"
-              className="rounded-full bg-saffron px-6 py-3 text-sm font-medium text-charcoal transition hover:bg-paper"
+              className="rounded-full bg-saffron px-6 py-3 text-sm font-medium text-paper transition hover:bg-paper hover:text-charcoal"
             >
               Explore treks
             </Link>
@@ -54,6 +55,11 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* 1. THE TOP DIVIDER: Hero to Stats */}
+      <div className="bg-charcoal w-full relative z-20">
+        <MountainDivider />
+      </div>
 
       {/* Stats */}
       <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
@@ -85,22 +91,29 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Closing CTA */}
-      <section className="mx-auto max-w-6xl px-4 pb-8 sm:px-6">
-        <div className="rounded-3xl bg-charcoal px-6 py-14 text-center text-paper sm:px-16">
-          <h2 className="font-display text-4xl">Every trek is private.</h2>
-          <p className="mx-auto mt-4 max-w-xl text-paper/60">
-            No fixed departures, no strangers in your group. Tell me your dates
-            and fitness level, and I&apos;ll build an itinerary around them.
-          </p>
-          <Link
-            href="/contact"
-            className="mt-8 inline-block rounded-full bg-saffron px-6 py-3 text-sm font-medium text-charcoal transition hover:bg-paper"
-          >
-            Start planning
-          </Link>
+      {/* 2. THE BOTTOM DIVIDER: Treks to Dark CTA */}
+      <div className="bg-paper w-full">
+        <MountainDivider flip={true} />
+      </div>
+
+      {/* Closing CTA (Note: pt-0 so it sits flush against the mountains) */}
+      <section className="bg-charcoal pt-0 pb-16">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <div className="rounded-3xl bg-charcoal-soft px-6 py-14 text-center text-paper sm:px-16">
+            <h2 className="font-display text-4xl">Every trek is private.</h2>
+            <p className="mx-auto mt-4 max-w-xl text-paper/60">
+              No fixed departures, no strangers in your group. Tell me your dates
+              and fitness level, and I&apos;ll build an itinerary around them.
+            </p>
+            <Link
+              href="/contact"
+              className="mt-8 inline-block rounded-full bg-saffron px-6 py-3 text-sm font-medium text-paper transition hover:bg-paper hover:text-charcoal"
+            >
+              Start planning
+            </Link>
+          </div>
         </div>
       </section>
-    </>
+    </div>
   );
 }

@@ -1,118 +1,113 @@
-import { createClient } from "@supabase/supabase-js";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-import { logout, updateStatus } from "./actions";
-import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import { treks } from "@/data/treks"; 
+import { TrekCard } from "@/components/trek-card";
 
-export const metadata: Metadata = {
-  title: "Admin Dashboard",
-};
+const stats = [
+  ["12", "years guiding"],
+  ["340+", "treks completed"],
+  ["5,545 m", "highest point"],
+  ["100%", "safety record"],
+];
 
-// Force this page to always fetch fresh data
-export const dynamic = "force-dynamic";
-
-export default async function AdminPage() {
-  const cookieStore = await cookies();
-  if (cookieStore.get("admin_session")?.value !== "authenticated") {
-    redirect("/admin/login");
-  }
-
-  const supabaseAdmin = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
-
-
-  const { data: bookings, error } = await supabaseAdmin
-    .from("bookings")
-    .select("*")
-    .order("created_at", { ascending: false });
-
-  if (error) {
-    return <div className="p-8 text-red-500">Error loading bookings: {error.message}</div>;
-  }
+export default function HomePage() {
+  const featured = treks.filter((t) => t.featured);
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="font-display text-4xl">Booking Requests</h1>
-          <p className="mt-1 text-charcoal/60">Manage your incoming treks.</p>
+    <>
+      {/* Hero section */}
+      <section className="relative flex min-h-[88vh] items-end overflow-hidden pb-12">
+        <Image
+          src="/images/hero.jpg"
+          alt="Himalayan trail at dawn"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-right"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/40 to-charcoal/10" />
+
+        <div className="relative z-10 mx-auto w-full max-w-6xl px-4 pb-24 sm:px-6">
+          <p className="text-xs uppercase tracking-[0.3em] text-saffron">
+            Freelance trekking guide · Nepal
+          </p>
+          <h1 className="mt-4 max-w-3xl font-display text-5xl leading-[1.05] text-paper sm:text-7xl">
+            iam editing the text
+          </h1>
+          <p className="mt-6 max-w-xl text-paper/70">
+            Private, small-group treks across Everest, Annapurna and Langtang —
+            planned around your pace, not a fixed departure date.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link
+              href="/treks"
+              className="rounded-full bg-saffron px-6 py-3 text-sm font-medium text-paper transition hover:bg-paper hover:text-charcoal"
+            >
+              Explore treks
+            </Link>
+            <Link
+              href="/contact"
+              className="rounded-full border border-paper/30 px-6 py-3 text-sm text-paper transition hover:border-paper"
+            >
+              Plan a custom trek
+            </Link>
+          </div>
         </div>
-        <form action={logout}>
-          <button className="rounded-full border border-charcoal/20 px-6 py-2 text-sm hover:bg-charcoal hover:text-paper transition">
-            Log Out
-          </button>
-        </form>
+      </section>
+
+      {/* THE TEST DIVIDER - Placed directly between the sections */}
+           <div style={{ backgroundColor: 'red', color: 'white', padding: '50px', textAlign: 'center' }}>
+        <h1 style={{ fontSize: '40px' }}>IF YOU SEE THIS, THE FILE IS WORKING</h1>
       </div>
 
-      <div className="mt-8 overflow-x-auto rounded-2xl border border-charcoal/10 bg-white">
-        <table className="w-full text-left text-sm">
-          <thead className="bg-paper text-charcoal/60">
-            <tr>
-              <th className="px-6 py-4 font-medium">Date Requested</th>
-              <th className="px-6 py-4 font-medium">Client</th>
-              <th className="px-6 py-4 font-medium">Trek</th>
-              <th className="px-6 py-4 font-medium">Start Date</th>
-              <th className="px-6 py-4 font-medium">Status</th>
-              <th className="px-6 py-4 font-medium">Action</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-charcoal/5">
-            {bookings?.map((booking) => (
-              <tr key={booking.id} className="hover:bg-paper/50">
-                <td className="px-6 py-4 text-charcoal/60">
-                  {new Date(booking.created_at).toLocaleDateString()}
-                </td>
-                <td className="px-6 py-4">
-                  <p className="font-medium">{booking.name}</p>
-                  <p className="text-xs text-charcoal/50">{booking.email}</p>
-                  <p className="text-xs text-charcoal/50">{booking.phone || "No phone"}</p>
-                </td>
-                <td className="px-6 py-4">
-                  <p className="font-medium">{booking.trek_slug}</p>
-                  <p className="text-xs text-charcoal/50">Group of {booking.group_size}</p>
-                  {booking.message && (
-                    <p className="mt-2 text-xs italic text-charcoal/60 max-w-xs">"{booking.message}"</p>
-                  )}
-                </td>
-                <td className="px-6 py-4">
-                  {new Date(booking.start_date).toLocaleDateString()}
-                </td>
-                <td className="px-6 py-4">
-                  <span className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${
-                    booking.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                    booking.status === 'confirmed' ? 'bg-green-100 text-green-800' :
-                    'bg-red-100 text-red-800'
-                  }`}>
-                    {booking.status.toUpperCase()}
-                  </span>
-                </td>
-                <td className="px-6 py-4">
-                  <form action={async () => {
-                    "use server";
-                    const newStatus = booking.status === "pending" ? "confirmed" : 
-                                      booking.status === "confirmed" ? "completed" : "pending";
-                    await updateStatus(booking.id, newStatus);
-                  }}>
-                    <button className="text-saffron hover:underline text-sm font-medium">
-                      Mark as {booking.status === "pending" ? "Confirmed" : 
-                               booking.status === "confirmed" ? "Completed" : "Pending"}
-                    </button>
-                  </form>
-                </td>
-              </tr>
-            ))}
-            {bookings?.length === 0 && (
-              <tr>
-                <td colSpan={6} className="px-6 py-12 text-center text-charcoal/50">
-                  No booking requests yet.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-    </div>
+      {/* Stats */}
+      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 bg-paper">
+        <dl className="grid grid-cols-2 gap-8 border-y border-charcoal/10 py-10 sm:grid-cols-4">
+          {stats.map(([value, label]) => (
+            <div key={label}>
+              <dt className="font-display text-3xl">{value}</dt>
+              <dd className="mt-1 text-sm text-charcoal/60">{label}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+
+      {/* Featured treks */}
+      <section className="mx-auto max-w-6xl px-4 pb-16 sm:px-6 bg-paper">
+        <div className="flex items-end justify-between">
+          <h2 className="font-display text-4xl">Featured treks</h2>
+          <Link
+            href="/treks"
+            className="text-sm text-charcoal/60 underline-offset-4 hover:underline"
+          >
+            View all →
+          </Link>
+        </div>
+        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {featured.map((trek) => (
+            <TrekCard key={trek.slug} trek={trek} />
+          ))}
+        </div>
+      </section>
+
+      {/* Closing CTA */}
+      <section className="bg-charcoal pt-16 pb-16">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <div className="rounded-3xl bg-charcoal-soft px-6 py-14 text-center text-paper sm:px-16">
+            <h2 className="font-display text-4xl">Every trek is private.</h2>
+            <p className="mx-auto mt-4 max-w-xl text-paper/60">
+              No fixed departures, no strangers in your group. Tell me your dates
+              and fitness level, and I&apos;ll build an itinerary around them.
+            </p>
+            <Link
+              href="/contact"
+              className="mt-8 inline-block rounded-full bg-saffron px-6 py-3 text-sm font-medium text-paper transition hover:bg-paper hover:text-charcoal"
+            >
+              Start planning
+            </Link>
+          </div>
+        </div>
+      </section>
+    </>
   );
 }
