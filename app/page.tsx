@@ -5,8 +5,8 @@ import { TrekCard } from "@/components/trek-card";
 import { MountainDivider } from "@/components/mountain-divider";
 
 const stats = [
-  ["12", "years guiding"],
-  ["340+", "treks completed"],
+  ["10", "years guiding"],
+  ["140+", "treks completed"],
   ["5,545 m", "highest point"],
   ["100%", "safety record"],
 ];
@@ -29,7 +29,7 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/40 to-charcoal/10" />
 
         <div className="relative z-10 mx-auto w-full max-w-6xl px-4 pb-24 sm:px-6">
-          <p className="text-xs uppercase tracking-[0.3em] text-saffron">
+          <p className="inline-block rounded-full bg-charcoal/60 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.3em] text-white backdrop-blur-md">
             Freelance trekking guide · Nepal
           </p>
           <h1 className="mt-4 max-w-3xl font-display text-5xl leading-[1.05] text-paper sm:text-7xl">
