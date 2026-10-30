@@ -4,7 +4,7 @@ export function MountainDivider({ className = "", flip = false }: { className?: 
       <svg
         className="relative block w-full h-[120px] sm:h-[200px]"
         viewBox="0 0 1200 220"
-        preserveAspectRatio="none"
+        preserveAspectRatio="xMidYMax slice"
         xmlns="http://www.w3.org/2000/svg"
       >
         {!flip ? (
