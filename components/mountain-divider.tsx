@@ -2,19 +2,17 @@ export function MountainDivider({ className = "", flip = false }: { className?: 
   return (
     <div className={`w-full overflow-hidden leading-[0] ${className}`}>
       <svg
-        className="relative block w-full h-[120px] sm:h-[200px]"
+        className="relative block w-[150%] -ml-[25%] h-[120px] sm:h-[200px]"
         viewBox="0 0 1200 220"
-        preserveAspectRatio="xMidYMax slice"
+        preserveAspectRatio="none"
         xmlns="http://www.w3.org/2000/svg"
       >
         {!flip ? (
           <>
-            {/* TOP VERSION: Dark mountains blending into light background */}
             <path
               d="M0 180 L90 130 L145 150 L230 75 L275 112 L345 35 L405 105 L455 80 L520 135 L590 55 L650 110 L720 25 L785 100 L835 65 L900 125 L970 45 L1035 105 L1090 80 L1150 130 L1200 100 L1200 220 L0 220 Z"
               fill="#486581"
             />
-            {/* Snow caps */}
             <path
               d="M315 68 L345 35 L374 70 L355 63 L345 72 L334 62 Z M568 80 L590 55 L614 83 L600 77 L591 84 L583 76 Z M694 59 L720 25 L749 61 L733 52 L720 60 L710 51 Z M948 69 L970 45 L993 71 L979 64 L969 72 L960 64 Z"
               fill="#f0f4f8"
@@ -30,7 +28,6 @@ export function MountainDivider({ className = "", flip = false }: { className?: 
           </>
         ) : (
           <>
-            {/* BOTTOM VERSION: Light mountains blending into dark footer */}
             <path
               d="M0 180 L90 130 L145 150 L230 75 L275 112 L345 35 L405 105 L455 80 L520 135 L590 55 L650 110 L720 25 L785 100 L835 65 L900 125 L970 45 L1035 105 L1090 80 L1150 130 L1200 100 L1200 220 L0 220 Z"
               fill="#d9e2ec"

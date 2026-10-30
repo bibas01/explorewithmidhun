@@ -15,6 +15,7 @@
     "next-mdx-remote": "^6.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-parallax-tilt": "^1.7.349",
     "recharts": "^3.10.1",
     "resend": "^4.1.0",
     "zod": "^4.6.7"
@@ -28,6 +29,6 @@
     "typescript": "^5.7.3"
   },
   "overrides": {
-    "postcss": "$postcss"
+    "postcss": "^8.5.10"
   }
 }
