@@ -14,7 +14,7 @@ export default function Logo({ size = 56, className = "" }: LogoProps) {
       className={`inline-flex items-center transition-opacity hover:opacity-90 ${className}`}
     >
       <Image
-        src="/logo.png" 
+        src="/images/logo.png" 
         alt="Explore with Midhun"
         width={size}
         height={size}
