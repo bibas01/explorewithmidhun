@@ -3,6 +3,8 @@ import Link from "next/link";
 import { treks } from "@/data/treks"; 
 import { TrekCard } from "@/components/trek-card";
 import { MountainDivider } from "@/components/mountain-divider";
+import { ScrollReveal } from "@/components/scroll-reveal";
+import { TestimonialsSection } from "@/components/testimonials-section";
 
 const stats = [
   ["10", "years guiding"],
@@ -35,7 +37,7 @@ export default function HomePage() {
           <h1 className="mt-4 max-w-3xl font-display text-5xl leading-[1.05] text-paper sm:text-7xl">
             Walk the Himalaya with someone who grew up in them.
           </h1>
-          <p className="mt-6 max-w-xl text-paper/70">
+          <p className="mt-6 max-w-xl text-paper/70 text-lg sm:text-base">
             Private, small-group treks across Everest, Annapurna and Langtang —
             planned around your pace, not a fixed departure date.
           </p>
@@ -61,57 +63,68 @@ export default function HomePage() {
         <MountainDivider />
       </div>
 
-      {/* Stats */}
+      {/* Stats (Wrapped in ScrollReveal) */}
       <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-        <dl className="grid grid-cols-2 gap-8 border-y border-charcoal/10 py-10 sm:grid-cols-4">
-          {stats.map(([value, label]) => (
-            <div key={label}>
-              <dt className="font-display text-3xl">{value}</dt>
-              <dd className="mt-1 text-sm text-charcoal/60">{label}</dd>
-            </div>
-          ))}
-        </dl>
+        <ScrollReveal>
+          <dl className="grid grid-cols-2 gap-8 border-y border-charcoal/10 py-10 sm:grid-cols-4">
+            {stats.map(([value, label]) => (
+              <div key={label}>
+                <dt className="font-display text-3xl">{value}</dt>
+                <dd className="mt-1 text-sm text-charcoal/60">{label}</dd>
+              </div>
+            ))}
+          </dl>
+        </ScrollReveal>
       </section>
 
-      {/* Featured treks */}
+      {/* Featured treks (Wrapped in ScrollReveal) */}
       <section className="mx-auto max-w-6xl px-4 pb-16 sm:px-6">
-        <div className="flex items-end justify-between">
-          <h2 className="font-display text-4xl">Featured treks</h2>
-          <Link
-            href="/treks"
-            className="text-sm text-charcoal/60 underline-offset-4 hover:underline"
-          >
-            View all →
-          </Link>
-        </div>
-        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {featured.map((trek) => (
-            <TrekCard key={trek.slug} trek={trek} />
-          ))}
-        </div>
+        <ScrollReveal>
+          <div className="flex items-end justify-between mb-8">
+            <h2 className="font-display text-4xl">Featured treks</h2>
+            <Link
+              href="/treks"
+              className="text-sm text-charcoal/60 underline-offset-4 hover:underline"
+            >
+              View all →
+            </Link>
+          </div>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {featured.map((trek) => (
+              <TrekCard key={trek.slug} trek={trek} />
+            ))}
+          </div>
+        </ScrollReveal>
       </section>
+
+      {/* 3. TESTIMONIALS (Wrapped in ScrollReveal) */}
+      <ScrollReveal>
+        <TestimonialsSection />
+      </ScrollReveal>
 
       {/* 2. THE BOTTOM DIVIDER: Treks to Dark CTA */}
       <div className="bg-paper w-full">
         <MountainDivider flip={true} />
       </div>
 
-      {/* Closing CTA (Note: pt-0 so it sits flush against the mountains) */}
+      {/* Closing CTA (Wrapped in ScrollReveal) */}
       <section className="bg-charcoal pt-0 pb-16">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="rounded-3xl bg-charcoal-soft px-6 py-14 text-center text-paper sm:px-16">
-            <h2 className="font-display text-4xl">Every trek is private.</h2>
-            <p className="mx-auto mt-4 max-w-xl text-paper/60">
-              No fixed departures, no strangers in your group. Tell me your dates
-              and fitness level, and I&apos;ll build an itinerary around them.
-            </p>
-            <Link
-              href="/contact"
-              className="mt-8 inline-block rounded-full bg-saffron px-6 py-3 text-sm font-medium text-paper transition hover:bg-paper hover:text-charcoal"
-            >
-              Start planning
-            </Link>
-          </div>
+          <ScrollReveal>
+            <div className="rounded-3xl bg-charcoal-soft px-6 py-14 text-center text-paper sm:px-16">
+              <h2 className="font-display text-4xl">Every trek is private.</h2>
+              <p className="mx-auto mt-4 max-w-xl text-paper/60">
+                No fixed departures, no strangers in your group. Tell me your dates
+                and fitness level, and I&apos;ll build an itinerary around them.
+              </p>
+              <Link
+                href="/contact"
+                className="mt-8 inline-block rounded-full bg-saffron px-6 py-3 text-sm font-medium text-paper transition hover:bg-paper hover:text-charcoal"
+              >
+                Start planning
+              </Link>
+            </div>
+          </ScrollReveal>
         </div>
       </section>
     </div>
