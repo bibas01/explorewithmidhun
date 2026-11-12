@@ -1,132 +1,89 @@
-import Image from "next/image";
 import Link from "next/link";
 import { treks } from "@/data/treks"; 
 import { TrekCard } from "@/components/trek-card";
-import { MountainDivider } from "@/components/mountain-divider";
+import { Marquee } from "@/components/marquee"; // ⬅️ Imported
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { TestimonialsSection } from "@/components/testimonials-section";
-
-const stats = [
-  ["10", "years guiding"],
-  ["140+", "treks completed"],
-  ["5,545 m", "highest point"],
-  ["100%", "safety record"],
-];
+import { HeroSection } from "@/components/hero-section";
+import { StatsSection } from "@/components/stats-section";
 
 export default function HomePage() {
   const featured = treks.filter((t) => t.featured);
 
   return (
     <div className="bg-paper min-h-screen">
-      {/* Hero section */}
-      <section className="relative flex min-h-[88vh] items-end overflow-hidden pb-12 bg-charcoal">
-        <Image
-          src="/images/hero.jpg"
-          alt="Himalayan trail at dawn"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-right"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/40 to-charcoal/10" />
+      
+      {/* 1. HERO */}
+      <HeroSection />
 
-        <div className="relative z-10 mx-auto w-full max-w-6xl px-4 pb-24 sm:px-6">
-          <p className="inline-block rounded-full bg-charcoal/60 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.3em] text-white backdrop-blur-md">
-            Freelance trekking guide · Nepal
-          </p>
-          <h1 className="mt-4 max-w-3xl font-display text-5xl leading-[1.05] text-paper sm:text-7xl">
-            Walk the Himalaya with someone who grew up in them.
-          </h1>
-          <p className="mt-6 max-w-xl text-paper/70 text-lg sm:text-base">
-            Private, small-group treks across Everest, Annapurna and Langtang —
-            planned around your pace, not a fixed departure date.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
+      {/* 2. MARQUEE DIVIDER (Transition from Hero to Stats) */}
+      <Marquee />
+
+      {/* 3. STATS */}
+      <StatsSection />
+
+      {/* 4. FEATURED TREKS (Horizontal Flick Effect) */}
+      <section className="relative mx-auto max-w-5xl px-4 pb-16 sm:px-6">
+        
+        {/* Header */}
+        <ScrollReveal>
+          <div className="flex items-end justify-between mb-12">
+            <h2 className="font-display text-4xl sm:text-5xl">Featured treks</h2>
             <Link
               href="/treks"
-              className="rounded-full bg-saffron px-6 py-3 text-sm font-medium text-paper transition hover:bg-paper hover:text-charcoal"
-            >
-              Explore treks
-            </Link>
-            <Link
-              href="/contact"
-              className="rounded-full border border-paper/30 px-6 py-3 text-sm text-paper transition hover:border-paper"
-            >
-              Plan a custom trek
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* 1. THE TOP DIVIDER: Hero to Stats */}
-      <div className="bg-charcoal w-full relative z-20">
-        <MountainDivider />
-      </div>
-
-      {/* Stats (Wrapped in ScrollReveal) */}
-      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-        <ScrollReveal>
-          <dl className="grid grid-cols-2 gap-8 border-y border-charcoal/10 py-10 sm:grid-cols-4">
-            {stats.map(([value, label]) => (
-              <div key={label}>
-                <dt className="font-display text-3xl">{value}</dt>
-                <dd className="mt-1 text-sm text-charcoal/60">{label}</dd>
-              </div>
-            ))}
-          </dl>
-        </ScrollReveal>
-      </section>
-
-      {/* Featured treks (Wrapped in ScrollReveal) */}
-      <section className="mx-auto max-w-6xl px-4 pb-16 sm:px-6">
-        <ScrollReveal>
-          <div className="flex items-end justify-between mb-8">
-            <h2 className="font-display text-4xl">Featured treks</h2>
-            <Link
-              href="/treks"
-              className="text-sm text-charcoal/60 underline-offset-4 hover:underline"
+              className="text-sm text-charcoal/60 underline-offset-4 hover:underline mb-2"
             >
               View all →
             </Link>
           </div>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {featured.map((trek) => (
-              <TrekCard key={trek.slug} trek={trek} />
-            ))}
-          </div>
         </ScrollReveal>
+        
+        {/* The Cards Container */}
+        <div className="flex flex-col">
+          {featured.map((trek, index) => (
+            <TrekCard key={trek.slug} trek={trek} index={index} />
+          ))}
+        </div>
+        
       </section>
 
-      {/* 3. TESTIMONIALS (Wrapped in ScrollReveal) */}
+      {/* 5. TESTIMONIALS */}
       <ScrollReveal>
         <TestimonialsSection />
       </ScrollReveal>
 
-      {/* 2. THE BOTTOM DIVIDER: Treks to Dark CTA */}
-      <div className="bg-paper w-full">
-        <MountainDivider flip={true} />
-      </div>
+      {/* 6. MARQUEE DIVIDER (Transition into Dark CTA) */}
+      <Marquee />
 
-      {/* Closing CTA (Wrapped in ScrollReveal) */}
-      <section className="bg-charcoal pt-0 pb-16">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+      {/* 7. CLOSING CTA (Massive Editorial Style) */}
+      <section className="relative flex min-h-[80vh] items-center justify-center overflow-hidden bg-charcoal py-32">
+        
+        {/* Giant subtle background text */}
+        <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none select-none">
+          <h2 className="font-display text-[25vw] leading-none text-white whitespace-nowrap">
+            Explore
+          </h2>
+        </div>
+
+        <div className="relative z-10 mx-auto max-w-4xl px-4 text-center sm:px-6">
           <ScrollReveal>
-            <div className="rounded-3xl bg-charcoal-soft px-6 py-14 text-center text-paper sm:px-16">
-              <h2 className="font-display text-4xl">Every trek is private.</h2>
-              <p className="mx-auto mt-4 max-w-xl text-paper/60">
-                No fixed departures, no strangers in your group. Tell me your dates
-                and fitness level, and I&apos;ll build an itinerary around them.
-              </p>
-              <Link
-                href="/contact"
-                className="mt-8 inline-block rounded-full bg-saffron px-6 py-3 text-sm font-medium text-paper transition hover:bg-paper hover:text-charcoal"
-              >
-                Start planning
-              </Link>
-            </div>
+            <h2 className="font-display text-5xl sm:text-7xl lg:text-8xl text-white leading-[1.05] mb-8 drop-shadow-2xl">
+              Every trek is <br className="hidden sm:block"/> private.
+            </h2>
+            <p className="mx-auto max-w-xl text-paper/60 text-lg sm:text-xl mb-12">
+              No fixed departures, no strangers in your group. Tell me your dates
+              and fitness level, and I'll build an itinerary around them.
+            </p>
+            <Link
+              href="/contact"
+              className="group relative inline-flex items-center justify-center overflow-hidden rounded-full bg-saffron px-12 py-5 text-sm font-bold uppercase tracking-widest text-charcoal transition-transform hover:scale-105 shadow-[0_0_40px_rgba(224,123,57,0.3)] hover:shadow-[0_0_60px_rgba(224,123,57,0.5)]"
+            >
+              <span className="relative z-10">Start Planning</span>
+            </Link>
           </ScrollReveal>
         </div>
       </section>
+      
     </div>
   );
 }
