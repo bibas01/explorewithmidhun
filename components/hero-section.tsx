@@ -3,9 +3,17 @@
 import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, useScroll, useTransform, useMotionValue, useSpring } from "framer-motion";
+import { 
+  motion, 
+  useScroll, 
+  useTransform, 
+  useMotionValue, 
+  useSpring, 
+  Variants 
+} from "framer-motion";
 
-const containerVariants = {
+// ⬅️ Added ": Variants" here
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -13,13 +21,14 @@ const containerVariants = {
   },
 };
 
-const wordVariants = {
+// ⬅️ Added ": Variants" here, and "as const" to the ease array
+const wordVariants: Variants = {
   hidden: { opacity: 0, y: 50, rotateX: -20 },
   visible: { 
     opacity: 1, 
     y: 0, 
     rotateX: 0,
-    transition: { duration: 1, ease: [0.22, 1, 0.36, 1] } 
+    transition: { duration: 1, ease: [0.22, 1, 0.36, 1] as const } 
   },
 };
 
@@ -56,7 +65,7 @@ export function HeroSection() {
     mouseY.set(0);
   };
 
-  // Scroll animations (existing)
+  // Scroll animations
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
@@ -86,7 +95,7 @@ export function HeroSection() {
       {/* Parallax Background Image */}
       <motion.div 
         style={isMobile ? {} : { y: scrollYImage, x: imageX }} 
-        className="absolute inset-0 z-0 h-[120%] w-[110%] -left-[5%]" // Made wider to prevent edges from showing
+        className="absolute inset-0 z-0 h-[120%] w-[110%] -left-[5%]"
       >
         <motion.div style={isMobile ? {} : { y: imageY }} className="w-full h-full relative">
           <Image
@@ -115,7 +124,6 @@ export function HeroSection() {
           animate="visible"
           className="max-w-5xl"
         >
-          {/* Re-enable pointer events on the text/buttons so they can be clicked */}
           <div className="pointer-events-auto">
             <motion.p 
               variants={wordVariants}
@@ -125,7 +133,7 @@ export function HeroSection() {
             </motion.p>
 
             <motion.h1 
-              style={isMobile ? {} : { y: textY }} // Additional mouse Y movement for text
+              style={isMobile ? {} : { y: textY }}
               className="font-display text-5xl leading-[1.05] text-white sm:text-7xl lg:text-8xl xl:text-[7.5rem] tracking-tight flex flex-wrap gap-x-3 gap-y-1 sm:gap-x-4 sm:gap-y-2 drop-shadow-2xl"
             >
               {words.map((word, index) => (
