@@ -40,7 +40,7 @@ export function MapHero() {
   const mapScale = useTransform(
     scrollYProgress, 
     [0, 0.15, 0.25, 0.45, 0.65, 0.85, 1], 
-    [1, 1.1, 3.5, 3.5, 3.5, 3.5, 3.5] 
+    [0.5, 0.55, 1.75, 1.75, 1.75, 1.75, 1.75] 
   );
 
   const mapX = useTransform(
@@ -92,7 +92,8 @@ export function MapHero() {
           style={{ scale: mapScale, x: mapX, y: mapY }}
           className="absolute inset-0 flex items-center justify-center pointer-events-none z-10"
         >
-          <div className="relative w-[1000px] h-[569px] max-w-[90vw]">
+          {/* Doubled resolution so text is sharp */}
+          <div className="relative w-[2000px] h-[1138px] max-w-none">
             <img 
               src="/nepal-map.svg" 
               alt="Map of Nepal" 
@@ -107,7 +108,7 @@ export function MapHero() {
           {/* Left Side (Intro & Region Cards) */}
           <div className="relative w-full md:w-3/5 h-full flex flex-col justify-center">
             
-            {/* Intro Text (UPDATED COLOR HERE) */}
+            {/* Intro Text */}
             <motion.div style={{ opacity: introOpacity, y: introY }} className="absolute bg-[#1c241c]/80 p-8 rounded-3xl backdrop-blur-md border border-[#7a8f73]/30 shadow-2xl">
               <p className="text-saffron uppercase tracking-[0.3em] text-sm mb-4 font-bold">The Himalayas</p>
               <h1 className="font-display text-6xl sm:text-8xl text-[#f0f4f8] drop-shadow-2xl">
@@ -116,7 +117,7 @@ export function MapHero() {
               <p className="mt-6 text-[#a3b19f] text-lg max-w-md drop-shadow-lg">Scroll to explore the regions.</p>
             </motion.div>
 
-            {/* BEAUTIFUL MINI-POSTER TREK CARDS */}
+            {/* 🚨 COMPACT INFO CARDS 🚨 */}
             {activeRegions.map((region, i) => (
               <motion.div 
                 key={region.id} 
@@ -130,36 +131,30 @@ export function MapHero() {
                   </span>
                 </div>
                 
-                {/* 2-Column Grid of Image Cards */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* Compact Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {region.treks.map((trek) => (
                     <Link 
                       key={trek.slug} 
                       href={`/treks/${trek.slug}`} 
-                      className="group relative block aspect-[4/3] overflow-hidden rounded-2xl border border-white/20 shadow-2xl transition-all hover:-translate-y-1 hover:border-saffron/50"
+                      className="group relative flex items-center gap-4 rounded-xl bg-charcoal/60 p-3 border border-white/20 backdrop-blur-md transition-all hover:bg-white/20 hover:border-saffron shadow-xl"
                     >
-                      <Image 
-                        src={trek.heroImage} 
-                        alt={trek.title} 
-                        fill 
-                        className="object-cover transition-transform duration-700 group-hover:scale-110" 
-                      />
+                      {/* Small square thumbnail */}
+                      <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg">
+                        <Image 
+                          src={trek.heroImage} 
+                          alt={trek.title} 
+                          fill 
+                          className="object-cover" 
+                        />
+                      </div>
                       
-                      <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/20 to-transparent opacity-90" />
-                      
-                      <div className="absolute inset-x-0 bottom-0 p-4">
-                        <h3 className="font-display text-xl text-white leading-tight drop-shadow-md group-hover:text-saffron transition-colors">
+                      {/* Text Info */}
+                      <div>
+                        <h3 className="font-display text-lg text-white leading-tight group-hover:text-saffron transition-colors drop-shadow-sm line-clamp-2">
                           {trek.title}
                         </h3>
                         <p className="text-xs text-paper/80 mt-1">{trek.days} Days · {trek.difficulty}</p>
-                      </div>
-
-                      <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <div className="bg-saffron text-charcoal rounded-full p-1.5">
-                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
-                          </svg>
-                        </div>
                       </div>
                     </Link>
                   ))}
