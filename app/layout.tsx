@@ -19,18 +19,12 @@ const instrument = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://example.com"), // ← replace with real domain
+  metadataBase: new URL("https://example.com"),
   title: {
-    default: "ExploreWithMidhun — Freelance Trekking Guide in Nepal",
+    default: "ExploreWithMidhun — Freelance Trekking Guide",
     template: "%s · ExploreWithMidhun",
   },
-  description:
-    "Licensed freelance trekking guide based in Kathmandu. Private, small-group treks in the Everest, Annapurna and Langtang regions.",
-  openGraph: {
-    type: "website",
-    locale: "en_US",
-    siteName: "ExploreWithMidhun",
-  },
+  description: "Licensed freelance trekking guide based in Kathmandu.",
 };
 
 export default function RootLayout({
@@ -40,7 +34,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${manrope.variable} ${instrument.variable}`}>
-      <body className="flex min-h-screen flex-col">
+      <body className="flex min-h-screen flex-col bg-paper text-charcoal">
         <SiteHeader />
         <main className="flex-1">{children}</main>
         <SiteFooter />

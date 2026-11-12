@@ -1,11 +1,10 @@
 import Link from "next/link";
 import { treks } from "@/data/treks"; 
 import { TrekCard } from "@/components/trek-card";
-import { Marquee } from "@/components/marquee"; // ⬅️ Imported
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { TestimonialsSection } from "@/components/testimonials-section";
-import { HeroSection } from "@/components/hero-section";
 import { StatsSection } from "@/components/stats-section";
+import { MapHero } from "@/components/map-hero";
 
 export default function HomePage() {
   const featured = treks.filter((t) => t.featured);
@@ -13,22 +12,17 @@ export default function HomePage() {
   return (
     <div className="bg-paper min-h-screen">
       
-      {/* 1. HERO */}
-      <HeroSection />
+      {/* 1. INTERACTIVE MAP HERO (Keeps its dark internal background) */}
+      <MapHero />
 
-      {/* 2. MARQUEE DIVIDER (Transition from Hero to Stats) */}
-      <Marquee />
-
-      {/* 3. STATS */}
+      {/* 2. STATS */}
       <StatsSection />
 
-      {/* 4. FEATURED TREKS (Horizontal Flick Effect) */}
-      <section className="relative mx-auto max-w-5xl px-4 pb-16 sm:px-6">
-        
-        {/* Header */}
+      {/* 3. FEATURED TREKS */}
+      <section className="relative mx-auto max-w-5xl px-4 pb-16 pt-16 sm:px-6">
         <ScrollReveal>
           <div className="flex items-end justify-between mb-12">
-            <h2 className="font-display text-4xl sm:text-5xl">Featured treks</h2>
+            <h2 className="font-display text-4xl sm:text-5xl text-charcoal">Featured treks</h2>
             <Link
               href="/treks"
               className="text-sm text-charcoal/60 underline-offset-4 hover:underline mb-2"
@@ -38,24 +32,19 @@ export default function HomePage() {
           </div>
         </ScrollReveal>
         
-        {/* The Cards Container */}
         <div className="flex flex-col">
           {featured.map((trek, index) => (
             <TrekCard key={trek.slug} trek={trek} index={index} />
           ))}
         </div>
-        
       </section>
 
-      {/* 5. TESTIMONIALS */}
+      {/* 4. TESTIMONIALS */}
       <ScrollReveal>
         <TestimonialsSection />
       </ScrollReveal>
 
-      {/* 6. MARQUEE DIVIDER (Transition into Dark CTA) */}
-      <Marquee />
-
-      {/* 7. CLOSING CTA (Massive Editorial Style) */}
+      {/* 5. CLOSING CTA (Massive Editorial Style) */}
       <section className="relative flex min-h-[80vh] items-center justify-center overflow-hidden bg-charcoal py-32">
         
         {/* Giant subtle background text */}

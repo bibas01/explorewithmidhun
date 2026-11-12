@@ -29,7 +29,7 @@ export function TestimonialsSection() {
       
       {/* Subtle background text to give it that Jiro depth */}
       <div className="absolute top-10 left-0 right-0 text-center opacity-[0.03] pointer-events-none select-none">
-        <h2 className="font-display text-[20vw] leading-none text-charcoal whitespace-nowrap">
+        <h2 className="font-display text-[20vw] leading-none text-white whitespace-nowrap">
           Reviews
         </h2>
       </div>

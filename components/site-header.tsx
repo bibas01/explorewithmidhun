@@ -20,7 +20,7 @@ export function SiteHeader() {
       initial={{ y: -100, opacity: 0 }} // Starts 100px above the screen and invisible
       animate={{ y: 0, opacity: 1 }}    // Slides down to its natural position and fades in
       transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }} // The "Apple-like" smooth easing
-      className="sticky top-0 z-50 border-b border-charcoal/10 bg-paper/90 backdrop-blur-md"
+      className="sticky top-0 z-50 border-b border-charcoal/10 bg-white/10 backdrop-blur-xl border-white/10 text-charcoal"
     >
       <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-4 sm:px-6">
         
@@ -44,7 +44,7 @@ export function SiteHeader() {
             <Link
               key={item.href}
               href={item.href}
-              className="text-charcoal/70 transition hover:text-charcoal"
+              className="text-charcoal/70 transition hover:text-saffron"
             >
               {item.label}
             </Link>

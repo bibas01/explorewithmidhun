@@ -10,7 +10,7 @@ const nav = [
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-charcoal/10 bg-paper">
+    <footer className="border-t border-charcoal/10 bg-white/10 backdrop-blur-xl border-white/10">
       <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 px-4 py-10 sm:flex-row sm:px-6">
         
         {/* 2. The Logo (Size 56 is slightly larger for the footer) */}
@@ -27,7 +27,7 @@ export function SiteFooter() {
             <Link
               key={item.href}
               href={item.href}
-              className="text-charcoal/70 transition hover:text-charcoal"
+              className="text-charcoal/70 transition hover:text-saffron"
             >
               {item.label}
             </Link>
