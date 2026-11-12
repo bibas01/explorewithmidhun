@@ -59,8 +59,8 @@ export function TrekFilters({ treks }: { treks: Trek[] }) {
       {/* Grid */}
       {filteredTreks.length > 0 ? (
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {filteredTreks.map((trek) => (
-            <TrekCard key={trek.slug} trek={trek} />
+          {filteredTreks.map((trek, index) => (
+            <TrekCard key={trek.slug} trek={trek} index={index} />
           ))}
         </div>
       ) : (
