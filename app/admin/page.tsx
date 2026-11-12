@@ -85,7 +85,7 @@ export default function HomePage() {
         </div>
         <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {featured.map((trek) => (
-            <TrekCard key={trek.slug} trek={trek} />
+            <TrekCard key={trek.slug} trek={trek} index={index} />
           ))}
         </div>
       </section>
