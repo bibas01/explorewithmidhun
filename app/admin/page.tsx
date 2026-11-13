@@ -1,113 +1,125 @@
-import Image from "next/image";
-import Link from "next/link";
-import { treks } from "@/data/treks"; 
-import { TrekCard } from "@/components/trek-card";
+import { createClient } from "@supabase/supabase-js";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { logout, updateStatus } from "./actions";
+import type { Metadata } from "next";
 
-const stats = [
-  ["12", "years guiding"],
-  ["340+", "treks completed"],
-  ["5,545 m", "highest point"],
-  ["100%", "safety record"],
-];
+export const metadata: Metadata = {
+  title: "Admin Dashboard",
+};
 
-export default function HomePage() {
-  const featured = treks.filter((t) => t.featured);
+export const dynamic = "force-dynamic";
+
+export default async function AdminPage() {
+  const cookieStore = await cookies();
+  if (cookieStore.get("admin_session")?.value !== "authenticated") {
+    redirect("/admin/login");
+  }
+
+  const supabaseAdmin = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+
+  const { data: bookings, error } = await supabaseAdmin
+    .from("bookings")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-charcoal text-red-400">
+        Error loading bookings: {error.message}
+      </div>
+    );
+  }
 
   return (
-    <>
-      {/* Hero section */}
-      <section className="relative flex min-h-[88vh] items-end overflow-hidden pb-12">
-        <Image
-          src="/images/hero.jpg"
-          alt="Himalayan trail at dawn"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-right"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/40 to-charcoal/10" />
-
-        <div className="relative z-10 mx-auto w-full max-w-6xl px-4 pb-24 sm:px-6">
-          <p className="text-xs uppercase tracking-[0.3em] text-saffron">
-            Freelance trekking guide · Nepal
-          </p>
-          <h1 className="mt-4 max-w-3xl font-display text-5xl leading-[1.05] text-paper sm:text-7xl">
-            iam editing the text
-          </h1>
-          <p className="mt-6 max-w-xl text-paper/70">
-            Private, small-group treks across Everest, Annapurna and Langtang —
-            planned around your pace, not a fixed departure date.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link
-              href="/treks"
-              className="rounded-full bg-saffron px-6 py-3 text-sm font-medium text-paper transition hover:bg-paper hover:text-charcoal"
-            >
-              Explore treks
-            </Link>
-            <Link
-              href="/contact"
-              className="rounded-full border border-paper/30 px-6 py-3 text-sm text-paper transition hover:border-paper"
-            >
-              Plan a custom trek
-            </Link>
+    <div className="min-h-screen bg-charcoal py-12 px-4 sm:px-6">
+      <div className="mx-auto max-w-6xl">
+        
+        {/* Header */}
+        <div className="flex items-center justify-between border-b border-stone/20 pb-6">
+          <div>
+            <h1 className="font-display text-4xl text-paper">Booking Requests</h1>
+            <p className="mt-1 text-paper-dim">Manage your incoming treks.</p>
           </div>
+          <form action={logout}>
+            <button className="rounded-full border border-stone/30 px-6 py-2 text-sm font-medium text-paper transition hover:bg-stone/20 hover:text-saffron">
+              Log Out
+            </button>
+          </form>
         </div>
-      </section>
 
-      {/* THE TEST DIVIDER - Placed directly between the sections */}
-           <div style={{ backgroundColor: 'red', color: 'white', padding: '50px', textAlign: 'center' }}>
-        <h1 style={{ fontSize: '40px' }}>IF YOU SEE THIS, THE FILE IS WORKING</h1>
+        {/* Table */}
+        <div className="mt-8 overflow-x-auto rounded-2xl border border-stone/20 bg-charcoal-soft shadow-xl">
+          <table className="w-full text-left text-sm text-paper">
+            <thead className="bg-charcoal/50 text-paper-dim border-b border-stone/20">
+              <tr>
+                <th className="px-6 py-4 font-medium">Date Requested</th>
+                <th className="px-6 py-4 font-medium">Client</th>
+                <th className="px-6 py-4 font-medium">Trek</th>
+                <th className="px-6 py-4 font-medium">Start Date</th>
+                <th className="px-6 py-4 font-medium">Status</th>
+                <th className="px-6 py-4 font-medium">Action</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-stone/20">
+              {bookings?.map((booking) => (
+                <tr key={booking.id} className="hover:bg-charcoal/30 transition-colors">
+                  <td className="px-6 py-4 text-paper-dim">
+                    {new Date(booking.created_at).toLocaleDateString()}
+                  </td>
+                  <td className="px-6 py-4">
+                    <p className="font-medium text-paper">{booking.name}</p>
+                    <p className="text-xs text-paper-dim">{booking.email}</p>
+                    <p className="text-xs text-paper-dim">{booking.phone || "No phone"}</p>
+                  </td>
+                  <td className="px-6 py-4">
+                    <p className="font-medium text-saffron">{booking.trek_slug}</p>
+                    <p className="text-xs text-paper-dim">Group of {booking.group_size}</p>
+                    {booking.message && (
+                      <p className="mt-2 text-xs italic text-paper-dim/70 max-w-xs">"{booking.message}"</p>
+                    )}
+                  </td>
+                  <td className="px-6 py-4 text-paper">
+                    {new Date(booking.start_date).toLocaleDateString()}
+                  </td>
+                  <td className="px-6 py-4">
+                    <span className={`inline-flex rounded-full px-3 py-1 text-xs font-bold ${
+                      booking.status === 'pending' ? 'bg-amber-900/30 text-amber-500 border border-amber-500/20' :
+                      booking.status === 'confirmed' ? 'bg-emerald-900/30 text-emerald-500 border border-emerald-500/20' :
+                      'bg-stone/20 text-stone border border-stone/30'
+                    }`}>
+                      {booking.status.toUpperCase()}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4">
+                    <form action={async () => {
+                      "use server";
+                      const newStatus = booking.status === "pending" ? "confirmed" : 
+                                        booking.status === "confirmed" ? "completed" : "pending";
+                      await updateStatus(booking.id, newStatus);
+                    }}>
+                      <button className="text-sm font-medium text-paper hover:text-saffron transition-colors underline-offset-2 hover:underline">
+                        Mark as {booking.status === "pending" ? "Confirmed" : 
+                                 booking.status === "confirmed" ? "Completed" : "Pending"}
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+              ))}
+              {bookings?.length === 0 && (
+                <tr>
+                  <td colSpan={6} className="px-6 py-12 text-center text-paper-dim">
+                    No booking requests yet.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
-
-      {/* Stats */}
-      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 bg-paper">
-        <dl className="grid grid-cols-2 gap-8 border-y border-charcoal/10 py-10 sm:grid-cols-4">
-          {stats.map(([value, label]) => (
-            <div key={label}>
-              <dt className="font-display text-3xl">{value}</dt>
-              <dd className="mt-1 text-sm text-charcoal/60">{label}</dd>
-            </div>
-          ))}
-        </dl>
-      </section>
-
-      {/* Featured treks */}
-      <section className="mx-auto max-w-6xl px-4 pb-16 sm:px-6 bg-paper">
-        <div className="flex items-end justify-between">
-          <h2 className="font-display text-4xl">Featured treks</h2>
-          <Link
-            href="/treks"
-            className="text-sm text-charcoal/60 underline-offset-4 hover:underline"
-          >
-            View all →
-          </Link>
-        </div>
-        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {featured.map((trek, index) => (
-            <TrekCard key={trek.slug} trek={trek} index={index} />
-          ))}
-        </div>
-      </section>
-
-      {/* Closing CTA */}
-      <section className="bg-charcoal pt-16 pb-16">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="rounded-3xl bg-charcoal-soft px-6 py-14 text-center text-paper sm:px-16">
-            <h2 className="font-display text-4xl">Every trek is private.</h2>
-            <p className="mx-auto mt-4 max-w-xl text-paper/60">
-              No fixed departures, no strangers in your group. Tell me your dates
-              and fitness level, and I&apos;ll build an itinerary around them.
-            </p>
-            <Link
-              href="/contact"
-              className="mt-8 inline-block rounded-full bg-saffron px-6 py-3 text-sm font-medium text-paper transition hover:bg-paper hover:text-charcoal"
-            >
-              Start planning
-            </Link>
-          </div>
-        </div>
-      </section>
-    </>
+    </div>
   );
 }

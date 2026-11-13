@@ -9,10 +9,10 @@ export default async function LoginPage() {
   }
 
   return (
-    <div className="mx-auto flex min-h-[70vh] max-w-sm flex-col justify-center px-4">
-      <div className="rounded-3xl border border-charcoal/10 bg-white p-8 shadow-sm">
-        <h1 className="font-display text-3xl text-center">Admin Login</h1>
-        <p className="mt-2 text-center text-sm text-charcoal/60">
+    <div className="flex min-h-[80vh] flex-col justify-center bg-charcoal px-4">
+      <div className="mx-auto w-full max-w-sm rounded-3xl border border-stone/30 bg-charcoal-soft p-8 shadow-2xl">
+        <h1 className="text-center font-display text-3xl text-paper">Admin Login</h1>
+        <p className="mt-2 text-center text-sm text-paper-dim">
           Enter your password to view bookings.
         </p>
         
@@ -20,7 +20,6 @@ export default async function LoginPage() {
           "use server";
           const res = await login(formData);
           if (res?.error) {
-            // In a real app you'd use useActionState here, but this keeps it simple
             throw new Error(res.error); 
           }
         }} className="mt-6 space-y-4">
@@ -30,12 +29,12 @@ export default async function LoginPage() {
               type="password"
               placeholder="Password"
               required
-              className="w-full rounded-lg border border-charcoal/20 px-4 py-3 focus:border-saffron focus:outline-none"
+              className="w-full rounded-xl border border-stone/50 bg-charcoal px-4 py-3 text-paper placeholder:text-paper-dim/50 focus:border-saffron focus:outline-none transition-colors"
             />
           </div>
           <button
             type="submit"
-            className="w-full rounded-full bg-charcoal py-3 text-sm font-medium text-paper transition hover:bg-saffron hover:text-charcoal"
+            className="w-full rounded-full bg-saffron py-3 text-sm font-bold text-charcoal transition hover:bg-paper hover:text-charcoal shadow-lg"
           >
             Log In
           </button>
