@@ -11,7 +11,7 @@ const stats = [
 
 export function StatsSection() {
   return (
-    <section className="bg-charcoal py-24 sm:py-32 border-b border-stone/20">
+    <section className="bg-white py-24 sm:py-32 border-b border-stone/20">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="grid grid-cols-2 gap-y-16 gap-x-8 md:grid-cols-4">
           {stats.map((stat, index) => (
@@ -24,16 +24,16 @@ export function StatsSection() {
               className="flex flex-col items-center text-center"
             >
               <div className="flex items-baseline">
-                <span className="font-display text-6xl sm:text-7xl lg:text-8xl text-paper tracking-tighter">
+                <span className="font-display text-6xl sm:text-7xl text-paper tracking-tighter">
                   {stat.value}
                 </span>
-                {stat.value.includes('+') && <span className="text-3xl text-saffron ml-1">+</span>}
-                {stat.value.includes('%') && <span className="text-3xl text-saffron ml-1">%</span>}
+                {stat.value.includes('+') && <span className="text-3xl text-saffron ml-1 font-bold">+</span>}
+                {stat.value.includes('%') && <span className="text-3xl text-saffron ml-1 font-bold">%</span>}
               </div>
               
-              <div className="mt-4 h-px w-8 bg-saffron/50" />
+              <div className="mt-4 h-[2px] w-8 bg-saffron/50" />
               
-              <p className="mt-4 text-xs font-semibold uppercase tracking-[0.2em] text-paper-dim">
+              <p className="mt-4 text-xs font-bold uppercase tracking-[0.2em] text-paper-dim">
                 {stat.label}
               </p>
             </motion.div>

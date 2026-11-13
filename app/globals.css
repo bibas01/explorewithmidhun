@@ -1,17 +1,18 @@
 @import "tailwindcss";
 
 @theme {
-  /* Earth Green Palette */
-  --color-charcoal: #0f110f;      /* Main Background */
-  --color-charcoal-soft: #1c241c; /* Cards / Surfaces */
-  --color-paper: #f0f4f8;         /* Primary Text */
-  --color-paper-dim: #a3b19f;     /* Muted Text */
-  --color-saffron: #e07b39;       /* Orange Accent */
-  --color-saffron-dark: #c46428;
-  --color-stone: #7a8f73;         /* Borders & Lines */
+  /* Snowpeak Glacial Palette */
+  --color-charcoal: #F4F8F6;      
+  --color-charcoal-soft: #FFFFFF; 
+  --color-paper: #143023;         
+  --color-paper-dim: #476858;     
+  --color-saffron: #38BDF8;       
+  --color-saffron-dark: #0EA5E9;  
+  --color-stone: #C5D5CD;         
 
+  /* ⬇️ Map the new fonts */
   --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-instrument), ui-serif, Georgia, serif;
+  --font-display: var(--font-cormorant), ui-serif, Georgia, serif;
 }
 
 html {
@@ -28,5 +29,12 @@ body {
 
 ::selection {
   background-color: var(--color-saffron);
-  color: var(--color-charcoal);
+  color: #ffffff;
+}
+
+/* ⬇️ Automatically apply the new premium font to all headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 500; /* Cormorant looks best at 500 or 600 */
+  letter-spacing: -0.02em; /* Adds that tight, editorial feel */
 }

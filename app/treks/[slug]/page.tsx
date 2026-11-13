@@ -1,17 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getTrek, treks } from "@/data/treks";
+import { treks, getTrek } from "@/data/treks";
 import { ElevationChart } from "@/components/elevation-chart";
 import { StickyBookingBar } from "@/components/sticky-booking-bar";
 import type { Metadata } from "next";
 
-// Generate static pages for all treks at build time
 export function generateStaticParams() {
   return treks.map((trek) => ({ slug: trek.slug }));
 }
 
-// Dynamic SEO metadata
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const trek = getTrek(slug);
@@ -51,7 +49,7 @@ export default async function TrekPage({ params }: { params: Promise<{ slug: str
   };
 
   return (
-    <article className="pb-24 sm:pb-0">
+    <article className="pb-24 sm:pb-0 bg-charcoal min-h-screen">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -68,7 +66,7 @@ export default async function TrekPage({ params }: { params: Promise<{ slug: str
         />
         <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/40 to-transparent" />
         <div className="absolute inset-x-0 bottom-0 mx-auto max-w-6xl px-4 pb-12 sm:px-6">
-          <Link href="/treks" className="text-sm text-paper/70 hover:text-paper">
+          <Link href="/treks" className="text-sm text-paper/70 hover:text-paper transition-colors">
             ← Back to all treks
           </Link>
           <h1 className="mt-4 font-display text-5xl text-paper sm:text-7xl">{trek.title}</h1>
@@ -89,37 +87,37 @@ export default async function TrekPage({ params }: { params: Promise<{ slug: str
           
           {/* Overview */}
           <section>
-            <h2 className="font-display text-3xl">Overview</h2>
-            <p className="mt-4 text-lg leading-relaxed text-charcoal/70">
+            <h2 className="font-display text-3xl text-paper">Overview</h2>
+            <p className="mt-4 text-lg leading-relaxed text-paper-dim">
               {trek.summary}
             </p>
           </section>
 
           {/* Elevation Chart */}
           <section>
-            <h2 className="mb-6 font-display text-3xl">Elevation Profile</h2>
+            <h2 className="mb-6 font-display text-3xl text-paper">Elevation Profile</h2>
             <ElevationChart itinerary={trek.itinerary} />
           </section>
 
           {/* Itinerary */}
           <section>
-            <h2 className="mb-6 font-display text-3xl">Itinerary</h2>
+            <h2 className="mb-6 font-display text-3xl text-paper">Itinerary</h2>
             <div className="space-y-4">
               {trek.itinerary.map((day: any) => (
-                <details key={day.day} className="group rounded-xl border border-charcoal/10 bg-paper p-4 [&_summary::-webkit-details-marker]:hidden">
+                <details key={day.day} className="group rounded-xl border border-stone/30 bg-charcoal-soft p-4 [&_summary::-webkit-details-marker]:hidden transition-colors hover:border-stone/50">
                   <summary className="flex cursor-pointer items-center justify-between font-medium">
                     <div className="flex items-center gap-4">
-                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-saffron/10 text-xs text-saffron-dark">
+                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-saffron/20 text-xs text-saffron font-bold">
                         {day.day}
                       </span>
-                      <span>{day.title}</span>
+                      <span className="text-paper">{day.title}</span>
                     </div>
-                    <span className="text-sm text-charcoal/50">{day.altitude}m</span>
+                    <span className="text-sm text-paper-dim">{day.altitude}m</span>
                   </summary>
-                  <div className="mt-4 pl-12 text-charcoal/70">
+                  <div className="mt-4 pl-12 text-paper-dim">
                     <p>{day.description}</p>
                     {day.hours && (
-                      <p className="mt-2 text-sm text-charcoal/50">Walking time: {day.hours}</p>
+                      <p className="mt-2 text-sm text-stone">Walking time: {day.hours}</p>
                     )}
                   </div>
                 </details>
@@ -130,21 +128,21 @@ export default async function TrekPage({ params }: { params: Promise<{ slug: str
           {/* Inclusions / Exclusions */}
           <section className="grid gap-8 sm:grid-cols-2">
             <div>
-              <h3 className="font-display text-2xl text-charcoal">What's Included</h3>
-              <ul className="mt-4 space-y-2 text-sm text-charcoal/70">
+              <h3 className="font-display text-2xl text-paper">What's Included</h3>
+              <ul className="mt-4 space-y-2 text-sm text-paper-dim">
                 {trek.inclusions.map((item: string, i: number) => (
                   <li key={i} className="flex gap-2">
-                    <span className="text-saffron">✓</span> {item}
+                    <span className="text-saffron font-bold">✓</span> {item}
                   </li>
                 ))}
               </ul>
             </div>
             <div>
-              <h3 className="font-display text-2xl text-charcoal">What's Not Included</h3>
-              <ul className="mt-4 space-y-2 text-sm text-charcoal/70">
+              <h3 className="font-display text-2xl text-paper">What's Not Included</h3>
+              <ul className="mt-4 space-y-2 text-sm text-paper-dim">
                 {trek.exclusions.map((item: string, i: number) => (
                   <li key={i} className="flex gap-2">
-                    <span className="text-charcoal/30">✕</span> {item}
+                    <span className="text-stone">✕</span> {item}
                   </li>
                 ))}
               </ul>
@@ -153,8 +151,8 @@ export default async function TrekPage({ params }: { params: Promise<{ slug: str
           
           {/* Gear List */}
           <section>
-            <h3 className="font-display text-2xl text-charcoal">Suggested Gear List</h3>
-            <ul className="mt-4 grid gap-2 text-sm text-charcoal/70 sm:grid-cols-2">
+            <h3 className="font-display text-2xl text-paper">Suggested Gear List</h3>
+            <ul className="mt-4 grid gap-2 text-sm text-paper-dim sm:grid-cols-2">
               {trek.gearList.map((item: string, i: number) => (
                 <li key={i} className="flex gap-2">
                   <span className="text-saffron">•</span> {item}
@@ -166,31 +164,31 @@ export default async function TrekPage({ params }: { params: Promise<{ slug: str
 
         {/* Right Column (Sidebar) */}
         <div className="lg:col-span-1">
-          <div className="sticky top-24 rounded-2xl border border-charcoal/10 bg-white/50 p-6 backdrop-blur">
-            <p className="text-sm text-charcoal/50">Guide fee from</p>
-            <p className="mt-1 font-display text-4xl">${trek.priceUSD}</p>
-            <p className="mt-2 text-xs text-charcoal/50 leading-relaxed">
+          <div className="sticky top-24 rounded-2xl border border-stone/30 bg-charcoal-soft p-6 shadow-2xl">
+            <p className="text-sm text-paper-dim font-bold">Guide fee from</p>
+            <p className="mt-1 font-display text-4xl text-paper">${trek.priceUSD}</p>
+            <p className="mt-2 text-xs text-paper-dim leading-relaxed">
               {trek.priceNote}
             </p>
             
-            <hr className="my-6 border-charcoal/10" />
+            <hr className="my-6 border-stone/20" />
             
             <div className="space-y-4 text-sm">
               <div>
-                <p className="font-medium text-charcoal">Permits Required</p>
-                <ul className="mt-1 space-y-1 text-charcoal/60">
-                  {trek.permits.map((p: string, i: number) => <li key={i}>{p}</li>)}
+                <p className="font-bold text-paper">Permits Required</p>
+                <ul className="mt-2 space-y-1 text-paper-dim">
+                  {trek.permits.map((p: string, i: number) => <li key={i}>• {p}</li>)}
                 </ul>
               </div>
               <div>
-                <p className="font-medium text-charcoal">Difficulty</p>
-                <p className="text-charcoal/60">{trek.difficulty}</p>
+                <p className="font-bold text-paper">Difficulty</p>
+                <p className="text-paper-dim mt-1">{trek.difficulty}</p>
               </div>
             </div>
 
             <Link
               href={`/contact?trek=${trek.slug}`}
-              className="mt-8 block w-full rounded-full bg-charcoal py-3 text-center text-sm font-medium text-paper transition hover:bg-saffron hover:text-charcoal"
+              className="mt-8 block w-full rounded-full bg-saffron py-3 text-center text-sm font-bold text-charcoal transition hover:bg-paper hover:scale-105 shadow-lg"
             >
               Request Dates
             </Link>
