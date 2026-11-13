@@ -1,12 +1,11 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, useScroll, useTransform, useMotionValueEvent } from "framer-motion";
 import { treks } from "@/data/treks";
 
-// 1. DEFINE THE REGIONS & CAMERA VALUES
 const regionsData = [
   { id: "annapurna", name: "Annapurna", x: "0%", y: "10%" },
   { id: "manaslu", name: "Manaslu", x: "-10%", y: "10%" },
@@ -22,13 +21,20 @@ const activeRegions = regionsData.map((region) => {
 export function MapHero() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
   
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
   });
 
-  // --- TRACK ACTIVE REGION FOR THE NAVIGATOR ---
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     if (latest < 0.35) setActiveIndex(0);
     else if (latest < 0.55) setActiveIndex(1);
@@ -37,10 +43,15 @@ export function MapHero() {
   });
 
   // --- MAP CAMERA TIMELINE ---
+  // Mobile: Start at 0.4 (fits screen), Zoom to 2.0 (massive)
+  // Desktop: Start at 1, Zoom to 2.5
+  const scaleDesktop = [1, 1.1, 2.5, 2.5, 2.5, 2.5, 2.5];
+  const scaleMobile = [0.4, 0.5, 2.0, 2.0, 2.0, 2.0, 2.0];
+
   const mapScale = useTransform(
     scrollYProgress, 
     [0, 0.15, 0.25, 0.45, 0.65, 0.85, 1], 
-    [0.5, 0.55, 1.75, 1.75, 1.75, 1.75, 1.75] 
+    isMobile ? scaleMobile : scaleDesktop
   );
 
   const mapX = useTransform(
@@ -49,24 +60,23 @@ export function MapHero() {
     ["0%", "0%", activeRegions[0].x, activeRegions[1].x, activeRegions[2].x, activeRegions[3].x, activeRegions[3].x]
   );
 
+  // Keep the Y axis centered on mobile so the pins are visible
   const mapY = useTransform(
     scrollYProgress, 
     [0, 0.15, 0.25, 0.45, 0.65, 0.85, 1], 
     ["0%", "0%", activeRegions[0].y, activeRegions[1].y, activeRegions[2].y, activeRegions[3].y, activeRegions[3].y]
   );
 
-  // --- TEXT & CARD OPACITY TIMELINES ---
   const introOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
   const introY = useTransform(scrollYProgress, [0, 0.1], [0, -50]);
   
-  const opacity1 = useTransform(scrollYProgress, [0.28, 0.33, 0.43, 0.45], [0, 1, 1, 0]); 
-  const opacity2 = useTransform(scrollYProgress, [0.48, 0.53, 0.63, 0.65], [0, 1, 1, 0]); 
-  const opacity3 = useTransform(scrollYProgress, [0.68, 0.73, 0.83, 0.85], [0, 1, 1, 0]); 
-  const opacity4 = useTransform(scrollYProgress, [0.88, 0.93, 1, 1], [0, 1, 1, 1]);       
+  const opacity1 = useTransform(scrollYProgress, [0.20, 0.25, 0.40, 0.45], [0, 1, 1, 0]); 
+  const opacity2 = useTransform(scrollYProgress, [0.40, 0.45, 0.60, 0.65], [0, 1, 1, 0]); 
+  const opacity3 = useTransform(scrollYProgress, [0.60, 0.65, 0.80, 0.85], [0, 1, 1, 0]); 
+  const opacity4 = useTransform(scrollYProgress, [0.80, 0.85, 1, 1], [0, 1, 1, 1]);       
 
   const cardOpacities = [opacity1, opacity2, opacity3, opacity4];
 
-  // --- CLICK-TO-SCROLL LOGIC ---
   const scrollToDestination = (index: number) => {
     if (!containerRef.current) return;
     const container = containerRef.current;
@@ -78,21 +88,18 @@ export function MapHero() {
   };
 
   return (
-    <div ref={containerRef} className="relative h-[400vh] bg-[#0f110f]">
+    <div ref={containerRef} className="relative h-[400vh] bg-charcoal border-b border-stone/20">
       
-      {/* Sticky Map Container */}
       <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center">
         
         {/* 🌲 NATURAL ATMOSPHERIC GLOWS 🌲 */}
         <div className="absolute top-1/4 right-0 w-[800px] h-[800px] bg-amber-700/15 rounded-full blur-[120px] pointer-events-none mix-blend-screen z-0" />
         <div className="absolute bottom-1/4 left-0 w-[800px] h-[800px] bg-emerald-900/20 rounded-full blur-[120px] pointer-events-none mix-blend-screen z-0" />
 
-        {/* The Map */}
         <motion.div 
           style={{ scale: mapScale, x: mapX, y: mapY }}
-          className="absolute inset-0 flex items-center justify-center pointer-events-none z-10"
+          className="absolute inset-0 flex items-center justify-center pointer-events-none z-10 overflow-hidden w-full"
         >
-          {/* Doubled resolution so text is sharp */}
           <div className="relative w-[2000px] h-[1138px] max-w-none">
             <img 
               src="/nepal-map.svg" 
@@ -102,45 +109,46 @@ export function MapHero() {
           </div>
         </motion.div>
 
-        {/* UI Overlays */}
-        <div className="relative z-20 w-full max-w-7xl px-6 h-full flex flex-col md:flex-row items-center justify-between pointer-events-none">
+        {/* 🚨 FIXED LAYOUT: Centered on all devices 🚨 */}
+        <div className="relative z-20 w-full max-w-[1400px] px-4 sm:px-8 h-full flex flex-col md:flex-row items-center justify-between pointer-events-none">
           
           {/* Left Side (Intro & Region Cards) */}
           <div className="relative w-full md:w-3/5 h-full flex flex-col justify-center">
             
             {/* Intro Text */}
-            <motion.div style={{ opacity: introOpacity, y: introY }} className="absolute bg-[#1c241c]/80 p-8 rounded-3xl backdrop-blur-md border border-[#7a8f73]/30 shadow-2xl">
-              <p className="text-saffron uppercase tracking-[0.3em] text-sm mb-4 font-bold">The Himalayas</p>
-              <h1 className="font-display text-6xl sm:text-8xl text-[#f0f4f8] drop-shadow-2xl">
+            <motion.div style={{ opacity: introOpacity, y: introY }} className="absolute w-full md:max-w-lg lg:max-w-2xl bg-charcoal-soft/90 p-6 sm:p-10 lg:p-16 rounded-3xl lg:rounded-[2rem] backdrop-blur-xl border border-stone/30 shadow-2xl">
+              <p className="text-saffron uppercase tracking-[0.3em] text-[10px] sm:text-sm mb-3 sm:mb-6 font-bold">The Himalayas</p>
+              <h1 className="font-display text-4xl sm:text-6xl lg:text-[7rem] text-paper leading-[1.05] lg:leading-[0.95] drop-shadow-2xl">
                 Find your<br/>mountain.
               </h1>
-              <p className="mt-6 text-[#a3b19f] text-lg max-w-md drop-shadow-lg">Scroll to explore the regions.</p>
+              <p className="mt-3 sm:mt-8 text-paper-dim text-sm sm:text-lg lg:text-2xl max-w-md drop-shadow-lg">
+                Scroll to explore the regions.
+              </p>
             </motion.div>
 
-            {/* 🚨 COMPACT INFO CARDS 🚨 */}
+            {/* 🚨 COMPACT REGION CARDS 🚨 */}
             {activeRegions.map((region, i) => (
               <motion.div 
                 key={region.id} 
                 style={{ opacity: cardOpacities[i] }} 
-                className="absolute w-full max-w-xl pointer-events-auto"
+                className="absolute w-full md:max-w-lg lg:max-w-2xl pointer-events-auto"
               >
-                <div className="mb-6 flex items-end gap-3 drop-shadow-lg">
-                  <h2 className="font-display text-4xl sm:text-6xl text-white">{region.name}</h2>
-                  <span className="text-sm text-saffron font-bold mb-1 bg-charcoal/60 px-3 py-1 rounded backdrop-blur-md border border-white/10">
+                <div className="mb-3 sm:mb-8 flex items-end gap-2 sm:gap-4 drop-shadow-lg">
+                  <h2 className="font-display text-3xl sm:text-5xl lg:text-7xl text-paper">{region.name}</h2>
+                  <span className="text-[10px] sm:text-sm lg:text-base text-saffron font-bold mb-1 sm:mb-2 bg-charcoal-soft px-2 sm:px-4 py-1 sm:py-1.5 rounded backdrop-blur-md border border-stone/30">
                     {region.treks.length} Treks
                   </span>
                 </div>
                 
-                {/* Compact Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 gap-2 sm:gap-4 lg:gap-6">
                   {region.treks.map((trek) => (
                     <Link 
                       key={trek.slug} 
                       href={`/treks/${trek.slug}`} 
-                      className="group relative flex items-center gap-4 rounded-xl bg-charcoal/60 p-3 border border-white/20 backdrop-blur-md transition-all hover:bg-white/20 hover:border-saffron shadow-xl"
+                      className="group relative flex items-center gap-3 sm:gap-5 rounded-xl sm:rounded-2xl bg-charcoal-soft/95 p-2 sm:p-4 lg:p-5 border border-stone/30 backdrop-blur-xl transition-all hover:bg-stone/20 hover:border-saffron shadow-xl hover:-translate-y-1"
                     >
-                      {/* Small square thumbnail */}
-                      <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg">
+                      {/* Small Thumbnail on Mobile */}
+                      <div className="relative h-12 w-12 sm:h-20 sm:w-20 lg:h-24 lg:w-24 shrink-0 overflow-hidden rounded-md sm:rounded-xl">
                         <Image 
                           src={trek.heroImage} 
                           alt={trek.title} 
@@ -149,12 +157,11 @@ export function MapHero() {
                         />
                       </div>
                       
-                      {/* Text Info */}
                       <div>
-                        <h3 className="font-display text-lg text-white leading-tight group-hover:text-saffron transition-colors drop-shadow-sm line-clamp-2">
+                        <h3 className="font-display text-sm sm:text-xl lg:text-2xl text-paper leading-tight group-hover:text-saffron transition-colors drop-shadow-sm line-clamp-1 sm:line-clamp-2">
                           {trek.title}
                         </h3>
-                        <p className="text-xs text-paper/80 mt-1">{trek.days} Days · {trek.difficulty}</p>
+                        <p className="text-[10px] sm:text-sm lg:text-base text-paper-dim mt-0.5 sm:mt-2">{trek.days} Days · {trek.difficulty}</p>
                       </div>
                     </Link>
                   ))}
@@ -163,26 +170,26 @@ export function MapHero() {
             ))}
           </div>
 
-          {/* Right Side (Minimal Scroll Spy Navigator) */}
-          <div className="relative w-[200px] pointer-events-auto hidden md:flex flex-col justify-center h-full">
-            <p className="text-[10px] uppercase tracking-[0.2em] text-white/60 font-bold mb-6 drop-shadow-md">Regions</p>
-            <div className="flex flex-col gap-6 relative">
-              <div className="absolute left-[5px] top-2 bottom-2 w-[1px] bg-white/20" />
+          {/* Right Side (Navigator - Hidden on Mobile) */}
+          <div className="relative w-[250px] lg:w-[300px] pointer-events-auto hidden md:flex flex-col justify-center h-full">
+            <p className="text-xs lg:text-sm uppercase tracking-[0.2em] text-paper-dim font-bold mb-8 drop-shadow-md">Regions</p>
+            <div className="flex flex-col gap-8 relative">
+              <div className="absolute left-[7px] top-4 bottom-4 w-[1.5px] bg-stone/30" />
               {activeRegions.map((region, i) => (
                 <button
                   key={region.id}
                   onClick={() => scrollToDestination(i)}
-                  className="group flex items-center gap-4 text-left relative z-10"
+                  className="group flex items-center gap-5 text-left relative z-10"
                 >
-                  <div className={`w-[11px] h-[11px] rounded-full border-2 transition-all duration-300 ${
+                  <div className={`w-4 h-4 lg:w-5 lg:h-5 rounded-full border-2 transition-all duration-300 ${
                     activeIndex === i 
                       ? "bg-saffron border-saffron scale-125 shadow-[0_0_15px_rgba(224,123,57,1)]" 
-                      : "bg-[#0f110f] border-white/50 group-hover:border-white"
+                      : "bg-charcoal border-stone group-hover:border-paper"
                   }`} />
-                  <span className={`text-sm font-bold transition-all duration-300 drop-shadow-md ${
+                  <span className={`text-base lg:text-xl font-bold transition-all duration-300 drop-shadow-md ${
                     activeIndex === i 
-                      ? "text-white translate-x-1" 
-                      : "text-white/50 group-hover:text-white/90"
+                      ? "text-paper translate-x-2" 
+                      : "text-paper-dim group-hover:text-paper"
                   }`}>
                     {region.name}
                   </span>

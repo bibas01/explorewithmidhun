@@ -6,17 +6,16 @@ import { motion } from "framer-motion";
 import type { Trek } from "@/lib/types";
 
 export function TrekCard({ trek, index }: { trek: Trek; index: number }) {
-  // Even cards slide in from the left, odd cards slide in from the right
   const isEven = index % 2 === 0;
-  const initialX = isEven ? -100 : 100; // Start 100px to the left or right
+  const initialX = isEven ? -100 : 100;
 
   return (
     <motion.div
       initial={{ opacity: 0, x: initialX }}
       whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: false, amount: 0.2 }} // once: false means it reverses on scroll up
+      viewport={{ once: false, amount: 0.2 }}
       transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-      className="w-full mb-8 sm:mb-12"
+      className="w-full mb-8 sm:mb-12 overflow-hidden" // ⬅️ Added overflow-hidden just in case
     >
       <Link href={`/treks/${trek.slug}`} className="group block w-full">
         <div className="relative flex h-[50vh] sm:h-[65vh] w-full flex-col justify-end overflow-hidden rounded-[2rem] bg-charcoal shadow-2xl border border-white/10">

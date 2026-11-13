@@ -19,7 +19,7 @@ const instrument = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://example.com"),
+  metadataBase: new URL("https://explorewithmidhun.com"),
   title: {
     default: "ExploreWithMidhun — Freelance Trekking Guide",
     template: "%s · ExploreWithMidhun",
@@ -34,7 +34,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${manrope.variable} ${instrument.variable}`}>
-      <body className="flex min-h-screen flex-col bg-paper text-charcoal">
+     <body className="flex min-h-screen flex-col bg-charcoal text-paper overflow-x-hidden">
         <SiteHeader />
         <main className="flex-1">{children}</main>
         <SiteFooter />
