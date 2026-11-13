@@ -22,16 +22,20 @@ export function SiteHeader() {
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       className="sticky top-0 z-50 border-b border-stone/20 bg-charcoal/80 backdrop-blur-md"
     >
+      {/* Restored the proper layout container */}
       <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-4 sm:px-6">
         
         <Link href="/" className="flex items-center gap-3">
-          <Image
-            src="/images/logo.png" 
-            alt="ExploreWithMidhun Logo"
-            width={40}
-            height={40}
-            className="rounded-full object-cover shadow-sm"
-          />
+          {/* ⬇️ The light background is now ONLY around the image */}
+          <div className="rounded-full bg-paper p-0.5 shadow-md">
+            <Image
+              src="/images/logo.png" 
+              alt="ExploreWithMidhun Logo"
+              width={44}
+              height={44}
+              className="rounded-full object-cover shadow-sm"
+            />
+          </div>
           <span className="hidden font-display text-2xl tracking-tight text-paper sm:block">
             ExploreWithMidhun<span className="text-saffron">.</span>
           </span>

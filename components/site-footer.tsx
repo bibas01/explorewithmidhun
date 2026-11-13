@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image"; // ⬅️ Added Image import
+import Image from "next/image";
 import { useState, useEffect } from "react";
 
 export function SiteFooter() {
@@ -70,13 +70,16 @@ export function SiteFooter() {
           
           {/* Logo & Copyright */}
           <div className="flex items-center gap-4">
-             <Image 
-               src="/images/logo.png" // ⬅️ Make sure this matches your logo file
-               width={36} 
-               height={36} 
-               alt="ExploreWithMidhun Logo" 
-               className="opacity-80 grayscale hover:grayscale-0 transition duration-300 rounded-full" 
-             />
+             {/* ⬇️ Added light background here, removed grayscale */}
+             <div className="rounded-full bg-paper p-0.5 shadow-md">
+               <Image 
+                 src="/images/logo.png" 
+                 width={36} 
+                 height={36} 
+                 alt="ExploreWithMidhun Logo" 
+                 className="rounded-full object-cover" 
+               />
+             </div>
              <span>© {new Date().getFullYear()} ExploreWithMidhun. All rights reserved.</span>
           </div>
 
