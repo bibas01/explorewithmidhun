@@ -79,7 +79,7 @@ export const treks: Trek[] = [
     season: "Mar–May · Sep–Nov",
     summary:
       "A full traverse of the Annapurna massif over the Thorong La — rainforest, high desert and the world's deepest gorge in one walk.",
-    heroImage: "/images/treks/ac-hero.webp",
+    heroImage: "/images/treks/ac-hero.jpg",
     gallery: [
       "/images/treks/ac-1.webp",
       "/images/treks/ac-2.webp",
