@@ -24,7 +24,8 @@ export function TrekCard({ trek, index }: { trek: Trek; index: number }) {
             src={trek.heroImage}
             alt={trek.title}
             fill
-            sizes="(max-width: 768px) 100vw, 80vw"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" 
+            quality={75}
             className="object-cover transition-transform duration-1000 group-hover:scale-105"
           />
           

@@ -36,6 +36,16 @@ export default function RootLayout({
   return (
     // ⬇️ Add the new variable to the HTML tag
     <html lang="en" className={`${manrope.variable} ${cormorant.variable}`}>
+      <head>
+        {/* 🚨 Preload the map for faster LCP */}
+        <link 
+          rel="preload" 
+          href="/nepal-map.svg" 
+          as="image" 
+          type="image/svg+xml" 
+          fetchPriority="high"
+        />
+      </head>
       <body className="flex min-h-screen flex-col bg-charcoal text-paper overflow-x-hidden">
         <SmoothScroll>
           <SiteHeader />

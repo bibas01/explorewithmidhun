@@ -121,6 +121,8 @@ export function MapHero() {
               src="/nepal-map.svg" 
               alt="Map of Nepal" 
               className="relative w-full h-full object-contain" 
+              fetchPriority="high"  
+              loading="eager"       
             />
           </div>
         </motion.div>
@@ -179,6 +181,8 @@ export function MapHero() {
                           src={trek.heroImage} 
                           alt={trek.title} 
                           fill 
+                          sizes="64px"      
+                          quality={70}
                           className="object-cover" 
                         />
                       </div>
