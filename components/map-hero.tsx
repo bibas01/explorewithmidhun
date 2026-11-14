@@ -41,10 +41,12 @@ export function MapHero() {
     mass: 0.8,
   });
 
+  // 🚨 THE FIX: These thresholds now exactly match the opacity timings below.
+  // When Annapurna is visible, activeIndex is 0. When Everest is visible, it's 3.
   useMotionValueEvent(smoothProgress, "change", (latest) => {
-    if (latest < 0.25) setActiveIndex(0);
-    else if (latest < 0.45) setActiveIndex(1);
-    else if (latest < 0.65) setActiveIndex(2);
+    if (latest < 0.45) setActiveIndex(0);
+    else if (latest < 0.65) setActiveIndex(1);
+    else if (latest < 0.85) setActiveIndex(2);
     else setActiveIndex(3);
   });
 
@@ -70,22 +72,25 @@ export function MapHero() {
     ["0%", "0%", activeRegions[0].y, activeRegions[1].y, activeRegions[2].y, activeRegions[3].y, activeRegions[3].y]
   );
 
-  const introOpacity = useTransform(smoothProgress, [0, 0.1], [1, 0]);
-  const introY = useTransform(smoothProgress, [0, 0.1], [0, -50]);
+  // --- CARD OPACITY TIMELINES ---
+  const introOpacity = useTransform(smoothProgress, [0, 0.10], [1, 0]);
+  const introY = useTransform(smoothProgress, [0, 0.10], [0, -50]);
   
   const opacity1 = useTransform(smoothProgress, [0.20, 0.25, 0.40, 0.45], [0, 1, 1, 0]); 
   const opacity2 = useTransform(smoothProgress, [0.40, 0.45, 0.60, 0.65], [0, 1, 1, 0]); 
   const opacity3 = useTransform(smoothProgress, [0.60, 0.65, 0.80, 0.85], [0, 1, 1, 0]); 
-  const opacity4 = useTransform(smoothProgress, [0.80, 0.85, 1, 1], [0, 1, 1, 1]);       
+  // Fixed the duplicate '1' input range that causes NaN errors
+  const opacity4 = useTransform(smoothProgress, [0.80, 0.85, 1], [0, 1, 1]);       
 
   const cardOpacities = [opacity1, opacity2, opacity3, opacity4];
 
   const scrollToDestination = (index: number) => {
     if (!containerRef.current) return;
     const container = containerRef.current;
-    const containerTop = container.offsetTop;
+    const containerTop = container.getBoundingClientRect().top + window.scrollY;
     const scrollableDistance = container.offsetHeight - window.innerHeight;
-    const targetProgresses = [0.25, 0.45, 0.65, 0.85];
+    // Updated targets to land perfectly in the middle of each card's visibility window
+    const targetProgresses = [0.35, 0.55, 0.75, 0.95]; 
     const targetScroll = containerTop + (scrollableDistance * targetProgresses[index]);
     window.scrollTo({ top: targetScroll, behavior: "smooth" });
   };
@@ -96,7 +101,6 @@ export function MapHero() {
       <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center">
         
         {/* 🏔️ SNOWY BACKGROUND IMAGE 🏔️ */}
-        {/* Make sure you have a snowy mountain image at /images/snow-bg.jpg */}
         <div className="absolute inset-0 z-0">
           <Image
             src="/images/snow-bg.webp" 
@@ -105,7 +109,6 @@ export function MapHero() {
             priority
             className="object-cover"
           />
-          {/* Light overlay to ensure text readability */}
           <div className="absolute inset-0 bg-white/20" />
         </div>
 
@@ -128,8 +131,8 @@ export function MapHero() {
           {/* Left Side (Intro & Region Cards) */}
           <div className="relative w-full md:w-3/5 h-full flex flex-col justify-center">
             
-            {/* Intro Card - Frosted Glass */}
-            <motion.div style={{ opacity: introOpacity, y: introY }} className="absolute w-full md:max-w-lg lg:max-w-2xl bg-white/40 p-8 sm:p-12 lg:p-16 rounded-[2rem] backdrop-blur-xl border border-white/60 shadow-[0_20px_50px_rgba(0,0,0,0.1)]">
+            {/* Intro Card */}
+            <motion.div style={{ opacity: introOpacity, y: introY }} className="absolute w-full md:max-w-lg lg:max-w-2xl bg-white/40 p-8 sm:p-12 lg:p-16 rounded-[2rem] backdrop-blur-xl border border-white/60 shadow-[0_20px_50px_rgba(0,0,0,0.1)] pointer-events-none">
               <div className="flex items-center gap-4 mb-4">
                 <p className="text-[#143023] uppercase tracking-[0.3em] text-xs sm:text-sm font-bold">The Himalayas</p>
                 <div className="h-[1px] w-12 bg-[#143023]/30" />
@@ -147,12 +150,15 @@ export function MapHero() {
               </div>
             </motion.div>
 
-            {/* Region Cards - Frosted Glass */}
+            {/* Region Cards */}
             {activeRegions.map((region, i) => (
               <motion.div 
                 key={region.id} 
                 style={{ opacity: cardOpacities[i] }} 
-                className="absolute w-full md:max-w-lg lg:max-w-xl pointer-events-auto"
+                className={`absolute w-full md:max-w-lg lg:max-w-xl ${
+                  // 🚨 THE FIX: Only the active card can be clicked.
+                  activeIndex === i ? "pointer-events-auto" : "pointer-events-none"
+                }`}
               >
                 <div className="mb-4 flex items-end gap-3">
                   <h2 className="font-display text-4xl sm:text-6xl text-[#143023]">{region.name}</h2>
